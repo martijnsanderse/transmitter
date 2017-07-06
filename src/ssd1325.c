@@ -119,7 +119,11 @@ void ssd1325Display(void) {
     for (uint32_t i=0; i<numberOfPixels; i++) {
         ssd1325Data(buffer[i]);
     }
-    
+}
+
+void ssd1325ClearBuffer(void) {
+    // clear buffer;
+    memset(buffer, 0, SSD1325_LCDHEIGHT * SSD1325_LCDWIDTH / 2);
 }
 
 void ssd1325SetPixel(uint32_t x, uint32_t y, uint32_t value) {

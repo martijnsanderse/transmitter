@@ -10,6 +10,8 @@
     appropriate size
     -----------------------------------------------------------------------*/
 
+#include <string.h>
+
 #include "spi.h"
 #include "gpio.h"
 #include "sys.h"
@@ -54,4 +56,5 @@ void ssd1325Data(uint8_t c);
 void ssd1325Init(void);
 void ssd1325Display(void);
 void ssd1325SetPixel(uint32_t x, uint32_t y, uint32_t value);
+void ssd1325ClearBuffer(void);
 

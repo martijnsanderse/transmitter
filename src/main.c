@@ -85,11 +85,6 @@ int main(void) {
     SysCtlClockSet(SYSCTL_SYSDIV_2_5 | SYSCTL_USE_PLL | SYSCTL_XTAL_16MHZ | SYSCTL_OSC_MAIN);
     
     ssd1325Init();
-    ssd1325SetPixel(0,0,0x02);
-    ssd1325SetPixel(1,1,0x08);
-    ssd1325SetPixel(2,2,0x0A);
-    ssd1325SetPixel(3,3,0x0F);
-
     ssd1325Display();
 
     if (pdTRUE != xTaskCreate(blinkRedTask, "blinkRedTask", 256, NULL, 1, NULL)) {
@@ -107,15 +102,41 @@ int main(void) {
 // Blink red task. blink 100ms, every second
 void blinkRedTask(void *pvParameters) {
     
+    gpioLedRed(true);
+    vTaskDelay(100);
+    gpioLedRed(false);
+    vTaskDelay(100);
+
+    gpioLedBlue(true);
+    vTaskDelay(100);
+    gpioLedBlue(false);
+    vTaskDelay(100);
+
+    gpioLedGreen(true);
+    vTaskDelay(100);
+    gpioLedGreen(false);
+    vTaskDelay(100);
+
 
     while (1){
-        GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_3, GPIO_PIN_3);
-        vTaskDelay(10);
-        GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_3, 0);
-            
+        //GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_3, GPIO_PIN_3);
+        //vTaskDelay(10);
+        //GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_3, 0);
+        for (uint32_t x=0; x < SSD1325_LCDWIDTH; x++) {
+            ssd1325ClearBuffer();
+            ssd1325Display();
+            // draw a vertical line
+            for (uint32_t y=0; y < SSD1325_LCDHEIGHT; y++) {
+                ssd1325SetPixel(x, y, 0x0F);
+            }
+            ssd1325Display();
+            vTaskDelay(10); // 1ms per tick    
+        }
+        
+
         //SysCtlDelay(clockFrequency/30); // 80Mhz. 3 ticks per delay. .1 sec = 80 000 000 / 30
         //GPIOPinWrite(GPIO_PORTF_BASE, IN1|IN2, 0);
-        vTaskDelay(1000); // 1ms per tick
+        
     }
 
 }

@@ -9,8 +9,11 @@
 #include "driverlib/sysctl.h"
 #include "inc/hw_memmap.h"
 
-#define PIN_DC GPIO_PIN_1 // Also connected to red led
-#define PIN_RST GPIO_PIN_2 // Also connected to blue led
+#define PIN_DC GPIO_PIN_1
+#define PIN_RST GPIO_PIN_2
+
+#define LED_RED GPIO_PIN_1
+#define LED_BLUE GPIO_PIN_2
 #define LED_GREEN GPIO_PIN_3
 
 void gpioInit();
@@ -20,6 +23,10 @@ void gpioResetOff();
 
 void gpioDataMode();
 void gpioCommandMode();
+
+void gpioLedRed(bool high);
+void gpioLedBlue(bool high);
+void gpioLedGreen(bool high);
 
 
 #endif //GPIO_H
