@@ -12,7 +12,7 @@ TARGET = main
 # MCU: part number to build for
 MCU = TM4C123GH6PM
 # SOURCES: list of input source sources
-SOURCES = main.c startup_gcc.c
+SOURCES = main.c startup_gcc.c gpio.c spi.c ssd1325.c uart.c sys.c
 SOURCES += FreeRTOS/portable/GCC/ARM_CM4F/port.c
 SOURCES += FreeRTOS/croutine.c 
 SOURCES += FreeRTOS/event_groups.c 
@@ -22,7 +22,7 @@ SOURCES += FreeRTOS/tasks.c
 SOURCES += FreeRTOS/timers.c
 SOURCES += FreeRTOS/portable/MemMang/heap_1.c
 # INCLUDES: list of includes, by default, use Includes directory
-INCLUDES = -I Include -I src/FreeRTOS/include
+INCLUDES = -I src -I src/FreeRTOS/include
 # OUTDIR: directory to use for output
 OUTDIR = build
 # TIVAWARE_PATH: path to tivaware folder
