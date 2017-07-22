@@ -110,7 +110,7 @@ void ssd1325Display(void) {
 
     ssd1325Command(SSD1325_SETCOLADDR); /* set column address */
     ssd1325Command(0x00); /* set column start address */
-    ssd1325Command(0x3f); /* set column end address */
+    ssd1325Command(0x3f);  /* set column end address */
     ssd1325Command(SSD1325_SETROWADDR); /* set row address */
     ssd1325Command(0x00); /* set row start address */
     ssd1325Command(0x3f); /* set row end address */
