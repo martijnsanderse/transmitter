@@ -4,6 +4,7 @@
 #define CHAR_WIDTH 5
 #define CHAR_HEIGHT 8
 
+
 void graphicsChar(char c, uint32_t x, uint32_t y, uint32_t foreground, uint32_t background) {
     
     // Convert the character to an index
@@ -28,13 +29,12 @@ void graphicsChar(char c, uint32_t x, uint32_t y, uint32_t foreground, uint32_t 
     }
 }
 
-void graphicsRectangle(uint32_t x, uint32_t y, uint32_t w, uint32_t h) {
-
-    for (uint16_t j = y; j < y+h; j++) {
-        for (uint16_t i = x; i < x+w; i++) {
-            
-            //ssd1325Data(d);
-        }
+void graphicsText(char* c, uint32_t x, uint32_t y, uint32_t foreground, uint32_t background) {
+    
+    while (*c) {
+        graphicsChar (*c, x, y, foreground, background);
+        x += CHAR_WIDTH+1; // not so nice. think about fontsize a bit.
+        c++;
     }
-
 }
+

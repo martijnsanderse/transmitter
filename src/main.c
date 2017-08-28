@@ -111,9 +111,10 @@ void blinkRedTask(void *pvParameters) {
         //     }
         // }
 
+        char* text = "abc";
         ssd1325ClearBuffer();
-        ssd1325SetPixel(64, 32, 10);
-        graphicsChar('a',100,20,15,1);
+        //ssd1325SetPixel(64, 32, 10);
+        graphicsText(text,10,20,15,1);
         ssd1325Display();
         vTaskDelay(1000);
 

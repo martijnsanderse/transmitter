@@ -1,7 +1,7 @@
 #include "mock_ssd1325.h"
 #include <stdio.h>
 
-uint32_t receivedPixelValues[8][5] = {0};
+uint32_t receivedPixelValues[64][128] = {0};
 
 
 uint32_t getReceivedValue(uint32_t x, uint32_t y) {
