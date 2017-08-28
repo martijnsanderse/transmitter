@@ -1,4 +1,12 @@
+#include <string.h>
+
+#include "spi.h"
+#include "gpio.h"
+#include "sys.h"
+
 #include "ssd1325.h"
+
+
 
 // the memory buffer for the LCD
 static uint8_t buffer[SSD1325_LCDHEIGHT * SSD1325_LCDWIDTH / 2] = {0};

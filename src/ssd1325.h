@@ -10,11 +10,7 @@
     appropriate size
     -----------------------------------------------------------------------*/
 
-#include <string.h>
 
-#include "spi.h"
-#include "gpio.h"
-#include "sys.h"
 
 #define SSD1325_LCDWIDTH    128
 #define SSD1325_LCDHEIGHT   64

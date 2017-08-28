@@ -4,21 +4,19 @@
 #define CHAR_WIDTH 5
 #define CHAR_HEIGHT 8
 
-
-
 void graphicsChar(char c, uint32_t x, uint32_t y, uint32_t foreground, uint32_t background) {
     
-        // Convert the character to an index
-    c = c & 0x7F;
+    // Convert the character to an index
+    //c = c & 0xFF; //  0x7F;   // mask off 8th bit
     if (c < ' ') {
-        c = 0;
+        c = 0;     // do not print anything under 'space'
     } else {
-        c -= ' ';
+        c -= ' '; // subtract 32 'space' because font array starts at 'space'
     }
 
-    uint8_t *chr = font+(c*CHAR_WIDTH); //&font[c*CHAR_WIDTH];
+    const unsigned char *chr = &font[c*CHAR_WIDTH];
 
-    // Draw pixels
+    // // Draw pixels
     for (uint32_t j=0; j<CHAR_WIDTH; j++) {
         for (uint32_t i=0; i<CHAR_HEIGHT; i++) {
             if (chr[j] & (1<<i)) {
