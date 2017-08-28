@@ -33,7 +33,6 @@ void test_graphicsChar(void)
     // assert
     for (uint32_t y = 0; y < 8; y++) {
         for (uint32_t x = 0; x < 5; x++) {
-            printf("testing value for x,y = %d, %d", x, test_y);
             TEST_ASSERT_EQUAL(expectedPixelValues[y][x], getReceivedValue(x, y));
         }
     }
