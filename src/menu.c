@@ -6,7 +6,6 @@
 
 
 void display_menu(struct state* state) {
-    uartPrintln("enter display_menu");
     // print colors
     uint32_t default_fg = 10;
     uint32_t default_bg = 0;
@@ -28,11 +27,8 @@ void display_menu(struct state* state) {
 // state function for displaying menu
 // and waiting for input, and determine what to do next.
 void displaying_menu(struct state * state) { 
-    uartPrintln("enter displaying_menu");
     // display menu first
     display_menu(state);
-
-    state->next = 0;
     
     // then wait for input, and determine what to do next.
     if (rxQueue != 0) {
@@ -40,7 +36,6 @@ void displaying_menu(struct state * state) {
         xQueueReceive(rxQueue, &event, portMAX_DELAY);
         switch(event) {
             case UP:
-                uartPrintln("Received up");
                 // update state
                 if (state->current_node->prev)
                     state->current_node = state->current_node->prev;
@@ -48,7 +43,6 @@ void displaying_menu(struct state * state) {
                 state->next = state->current_node->on_click_state;
                 break;
             case DOWN:
-                uartPrintln("Received down");
                 // update state
                 if (state->current_node->next)
                     state->current_node = state->current_node->next;
@@ -56,18 +50,19 @@ void displaying_menu(struct state * state) {
                 state->next = state->current_node->on_click_state;
                 break;
             case BACK:
-                uartPrintln("Received back");
                 // update state
                 if (state->current_node->parent)
                     state->current_node = state->current_node->parent;
                 break;
             case SELECT:
-                uartPrintln("Received select");
                 if (state->current_node->child)
                     state->current_node = state->current_node->child;
+                uartPrintln(state->current_node->name);
+
                 break;
             default:
                 // prepare for the next state transition
+                uartPrintln("received nothing?");
                 state->next = 0;
                 break;
         }
@@ -80,7 +75,7 @@ void menuInitNode(struct node* s, char* n, struct node* pr, struct node* ne, str
     s->next = ne;
     s->parent = pa;
     s->child = ch;
-    s->on_click_state = displaying_menu;
+    s->on_click_state = displaying_menu; // not used right now.
 }
 
 void menuStartLoop(struct node* rootNode)

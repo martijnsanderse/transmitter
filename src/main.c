@@ -167,7 +167,6 @@ void blinkRedTask(void *pvParameters) {
         menuInitNode(&menu3_4, "menu 3.4", &menu3_3, 0,         &menu3, 0);
 
         menuStartLoop(&menu1);
-        ssd1325Display();
         uartPrintln("exited menu loop");
 
         vTaskDelay(1000);
