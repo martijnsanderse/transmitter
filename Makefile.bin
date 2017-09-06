@@ -12,7 +12,7 @@ TARGET = main
 # MCU: part number to build for
 MCU = TM4C123GH6PM
 # SOURCES: list of input source sources
-SOURCES = main.c startup_gcc.c gpio.c spi.c ssd1325.c uart.c sys.c graphics.c
+SOURCES = main.c startup_gcc.c gpio.c spi.c ssd1325.c uart.c sys.c graphics.c menu.c
 SOURCES += FreeRTOS/portable/GCC/ARM_CM4F/port.c
 SOURCES += FreeRTOS/croutine.c 
 SOURCES += FreeRTOS/event_groups.c 

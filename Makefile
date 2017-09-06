@@ -39,12 +39,16 @@ test: $(BUILD_PATHS) $(RESULTS)
 	@echo `grep -s FAIL $(PATHR)*.txt`
 	@echo "\nDONE"
 
+# include $(wildcard $(PATHD)*.d)
 
 $(PATHR)%.txt: $(PATHB)%.$(TARGET_EXTENSION)
 	-./$< > $@ 2>&1
 
 # create executables
-$(PATHB)test%.$(TARGET_EXTENSION): $(PATHO)test%.o $(PATHO)%.o $(PATHU)unity.o $(PATHD)test%.d $(PATHO)mock_ssd1325.o
+$(PATHB)testgraphics.$(TARGET_EXTENSION): $(PATHO)testgraphics.o $(PATHO)graphics.o $(PATHU)unity.o $(PATHO)mock_ssd1325.o
+	$(LINK) -o $@ $^
+
+$(PATHB)testmenu.$(TARGET_EXTENSION): $(PATHO)testmenu.o $(PATHO)menu.o $(PATHU)unity.o $(PATHO)mock_graphics.o
 	$(LINK) -o $@ $^
 
 # create object files
@@ -57,9 +61,9 @@ $(PATHO)%.o:: $(PATHS)%.c
 $(PATHO)%.o:: $(PATHU)%.c $(PATHU)%.h
 	$(COMPILE) $(CFLAGS) $< -o $@
 
-# create the dependencies
-$(PATHD)%.d:: $(PATHT)%.c
-	$(DEPEND) $@ $<
+# # create the dependencies
+# $(PATHD)%.d:: $(PATHT)%.c
+# 	$(DEPEND) $@ $<
 
 # have make create directories for us
 $(PATHB):

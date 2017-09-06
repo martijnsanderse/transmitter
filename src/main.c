@@ -33,9 +33,10 @@
 //#define PWM_PERIOD 8000 // so pwm at 10kHz if 80Mhz clock.
 
 #include "ssd1325.h"
-#include "gpio.h" // for rxQueue
+#include "gpio.h" // for rxQueue and UIEvent
 #include "uart.h"
 #include "graphics.h"
+#include "menu.h"
 
 // task prototypes
     
@@ -51,12 +52,12 @@ int main(void) {
     uartInit();
     uartPrintln("Start");
 
-    // rxQueue = xQueueCreate(10, sizeof(uint32_t));
-    // if (rxQueue == NULL) {
-    //     uartPrintln("no Queue\r\n");
-    // } else {
-    //     uartPrintln("Queue OK.");
-    // }
+    rxQueue = xQueueCreate(10, sizeof(enum UIEvent));
+    if (rxQueue == NULL) {
+        uartPrintln("no Queue\r\n");
+    } else {
+        uartPrintln("Queue OK.");
+    }
     
     if (pdTRUE != xTaskCreate(blinkRedTask, "blinkRedTask", 256, NULL, 1, NULL)) {
         while (1) ;  // Oh no!  Must not have had enough memory to create the task.
@@ -74,9 +75,9 @@ int main(void) {
 void blinkRedTask(void *pvParameters) {
     
     uartPrintln("Start task.");
-    gpioLedRed(true);
+    gpioLedGreen(true);
     vTaskDelay(100);
-    gpioLedRed(false);
+    gpioLedGreen(false);
     vTaskDelay(100);
 
     // gpioLedBlue(true);
@@ -92,7 +93,7 @@ void blinkRedTask(void *pvParameters) {
 
 
     while (1){
-        uartPrintln("Task loop.");
+        //uartPrintln("Task loop.");
         //GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_3, GPIO_PIN_3);
         //vTaskDelay(10);
         //GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_3, 0);
@@ -100,22 +101,75 @@ void blinkRedTask(void *pvParameters) {
         // if (rxQueue != 0) {
         //     while (uxQueueMessagesWaiting(rxQueue) > 0) {
 
-        //         int32_t direction = 0;
-        //         xQueueReceive(rxQueue, &direction, (TickType_t)10);
+        //         enum UIEvent event = UP;
+        //         xQueueReceive(rxQueue, &event, (TickType_t)10);
 
-        //         if (direction) {
-        //             uartPrintln("up");
-        //         } else {
-        //             uartPrintln("down");
-        //         }
+        //         switch (event) {
+        //             case UP:
+        //                 uartPrintln("up");
+        //                 break;
+        //             case DOWN:
+        //                 uartPrintln("down");
+        //                 break;
+        //             case SELECT:
+        //                 uartPrintln("select");
+        //                 break;
+        //             case BACK:
+        //                 uartPrintln("back");
+        //                 break;
+        //             default:
+        //                 uartPrintln("no!");
+        //                 break;
+
+        //         } 
         //     }
         // }
 
-        char* text = "abc";
-        ssd1325ClearBuffer();
-        //ssd1325SetPixel(64, 32, 10);
-        graphicsText(text,10,20,15,1);
+        // //char* text = "Hello.";
+        // ssd1325ClearBuffer();
+        // //ssd1325SetPixel(64, 32, 10);
+        // // graphicsText(text,10,20,15,1);
+        // // ssd1325Display();
+        
+           // declare empty nodes
+        struct node menu1;
+        struct node menu2;
+        struct node menu3;
+
+        struct node menu1_1;
+        struct node menu1_2;
+
+        struct node menu2_1;
+        struct node menu2_2;
+        struct node menu2_3;
+
+        struct node menu3_1;
+        struct node menu3_2;
+        struct node menu3_3;
+        struct node menu3_4;
+
+        // initialize all nodes. This step defines the menu structure.
+        // init(struct_to_init_ptr, name, previous, next, parent, child)
+        menuInitNode(&menu1, "menu 1", 0,        &menu2, 0, &menu1_1);
+        menuInitNode(&menu2, "menu 2", &menu1,   &menu3, 0, &menu2_1);
+        menuInitNode(&menu3, "menu 3", &menu2,   0,      0, &menu3_1);
+
+        menuInitNode(&menu1_1, "menu 1.1", 0,       &menu1_2,   &menu1, 0);
+        menuInitNode(&menu1_2, "menu 1.2", &menu1_1, 0,         &menu1, 0);
+
+        menuInitNode(&menu2_1, "menu 2.1", 0,       &menu2_2,   &menu2, 0);
+        menuInitNode(&menu2_2, "menu 2.2", &menu2_1, &menu2_3,  &menu2, 0);
+        menuInitNode(&menu2_3, "menu 2.3", &menu2_2, 0,         &menu2, 0);
+
+        menuInitNode(&menu3_1, "menu 3.1", 0,       &menu3_2,   &menu3, 0);
+        menuInitNode(&menu3_2, "menu 3.2", &menu3_1, &menu3_3,  &menu3, 0);
+        menuInitNode(&menu3_3, "menu 3.3", &menu3_2, &menu3_4,  &menu3, 0);
+        menuInitNode(&menu3_4, "menu 3.4", &menu3_3, 0,         &menu3, 0);
+
+        menuStartLoop(&menu1);
         ssd1325Display();
+        uartPrintln("exited menu loop");
+
         vTaskDelay(1000);
 
         //SysCtlDelay(clockFrequency/30); // 80Mhz. 3 ticks per delay. .1 sec = 80 000 000 / 30

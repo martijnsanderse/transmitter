@@ -13,13 +13,23 @@
 #include "driverlib/interrupt.h"
 #include "inc/hw_ints.h"
 #include "inc/hw_memmap.h"
+#include "inc/hw_types.h" // for HWREG
+#include "inc/hw_gpio.h"
 
 #define PIN_DC GPIO_PIN_1
 #define PIN_RST GPIO_PIN_2
 
-#define LED_RED GPIO_PIN_1
+#define SW_SELECT GPIO_PIN_1
+#define SW_BACK GPIO_PIN_4
 #define LED_BLUE GPIO_PIN_2
 #define LED_GREEN GPIO_PIN_3
+
+enum UIEvent {
+    UP,
+    DOWN,
+    SELECT,
+    BACK
+};
 
 QueueHandle_t rxQueue;
 
@@ -31,7 +41,6 @@ void gpioResetOff();
 void gpioDataMode();
 void gpioCommandMode();
 
-void gpioLedRed(bool high);
 void gpioLedBlue(bool high);
 void gpioLedGreen(bool high);
 
