@@ -1,9 +1,10 @@
 #include "menu.h"
 #include "graphics.h"
 #include "ssd1325.h"
-#include "gpio.h" // for UIEvent
-#include "uart.h" // for debugs
+//#include "gpio.h"
+#include "event.h"
 
+QueueHandle_t rxQueue;
 
 void display_menu(struct state* state) {
     // print colors
@@ -24,6 +25,50 @@ void display_menu(struct state* state) {
     ssd1325Display();
 }
 
+void display_home_screen(struct state* state) {
+    // print colors
+    uint32_t default_fg = 10;
+    uint32_t default_bg = 0;
+    uint32_t active_fg = 15;
+    uint32_t active_bg = 1;
+    ssd1325ClearBuffer();
+    graphicsText("home screen", 35, 25, default_fg, default_bg);
+    graphicsText("placeholder", 35, 35, default_fg, default_bg);
+    ssd1325Display();
+}
+
+// state function for showing main screen
+void displaying_home_screen(struct state * state) {
+    // display menu first
+    display_home_screen(state);
+    
+    // then wait for input, and determine what to do next.
+    if (rxQueue != 0) {
+        enum UIEvent event = UP;
+        xQueueReceive(rxQueue, &event, portMAX_DELAY);
+        switch(event) {
+            case SELECT:
+                // update position in the tree
+                if (state->current_node->child)
+                    state->current_node = state->current_node->child;
+                // set next state function
+                state->next = state->current_node->on_click_state;
+                break;
+            case BACK:
+            case DOWN:
+            case UP:
+                // do nothing
+                break;
+            case EXIT:
+            default:
+                // prepare for the exit the menu loop in the next round.
+                state->next = 0;
+                break;
+        }
+    }
+}
+
+
 // state function for displaying menu
 // and waiting for input, and determine what to do next.
 void displaying_menu(struct state * state) { 
@@ -36,52 +81,55 @@ void displaying_menu(struct state * state) {
         xQueueReceive(rxQueue, &event, portMAX_DELAY);
         switch(event) {
             case UP:
-                // update state
+                // update position in the tree
                 if (state->current_node->prev)
                     state->current_node = state->current_node->prev;
-                // prepare for the next state transition
+                // set next state function
                 state->next = state->current_node->on_click_state;
                 break;
             case DOWN:
-                // update state
+                // update position in the tree
                 if (state->current_node->next)
                     state->current_node = state->current_node->next;
-                // prepare for the next state transition
+                // set next state function
                 state->next = state->current_node->on_click_state;
                 break;
             case BACK:
-                // update state
+                // update position in the tree
                 if (state->current_node->parent)
                     state->current_node = state->current_node->parent;
+                // set next state function
+                state->next = state->current_node->on_click_state;
                 break;
             case SELECT:
+                // update position in the tree
                 if (state->current_node->child)
                     state->current_node = state->current_node->child;
-                uartPrintln(state->current_node->name);
-
+                // set next state function
+                state->next = state->current_node->on_click_state;
                 break;
+            case EXIT:
             default:
-                // prepare for the next state transition
-                uartPrintln("received nothing?");
+                // prepare for the exit the menu loop in the next round.
                 state->next = 0;
                 break;
         }
     }
 }
 
-void menuInitNode(struct node* s, char* n, struct node* pr, struct node* ne, struct node* pa, struct node* ch) {
+void menuInitNode(struct node* s, char* n, struct node* pr, struct node* ne, struct node* pa, struct node* ch, state_fn* next_state_funtion) {
     s->name = n;
     s->prev = pr;
     s->next = ne;
     s->parent = pa;
     s->child = ch;
-    s->on_click_state = displaying_menu; // not used right now.
+    s->on_click_state = next_state_funtion;
 }
 
-void menuStartLoop(struct node* rootNode)
+void menuStartLoop(struct node* rootNode, QueueHandle_t queue)
 {    
-    
-    struct state state = { displaying_menu, rootNode };
+    rxQueue = queue;
+    struct state state = { rootNode->on_click_state, rootNode };
     while(state.next) state.next(&state);
 
 }

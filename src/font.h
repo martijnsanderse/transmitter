@@ -1,6 +1,9 @@
 #ifndef FONT_H
 #define FONT_H
 
+#define CHAR_WIDTH 5
+#define CHAR_HEIGHT 8
+
 const unsigned char font[96*5] = { // char, ascii table position: 
     0x00,0x00,0x00,0x00,0x00, // space    32
     0x00,0x00,0xbe,0x00,0x00, // ! 

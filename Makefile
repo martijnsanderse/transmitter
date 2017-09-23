@@ -24,7 +24,7 @@ COMPILE=gcc -c
 LINK=gcc
 DEPEND=gcc -MM -MG -MF
 # compile flags: paths
-CFLAGS=-I. -I$(PATHU) -I$(PATHS) 
+CFLAGS=-I. -I$(PATHU) -I$(PATHS) -I src/FreeRTOS/include -I src/FreeRTOS/portable/GCC/ARM_CM4F
 # compile flags: define test
 CFLAGS += -DTEST
 
@@ -48,7 +48,7 @@ $(PATHR)%.txt: $(PATHB)%.$(TARGET_EXTENSION)
 $(PATHB)testgraphics.$(TARGET_EXTENSION): $(PATHO)testgraphics.o $(PATHO)graphics.o $(PATHU)unity.o $(PATHO)mock_ssd1325.o
 	$(LINK) -o $@ $^
 
-$(PATHB)testmenu.$(TARGET_EXTENSION): $(PATHO)testmenu.o $(PATHO)menu.o $(PATHU)unity.o $(PATHO)mock_graphics.o
+$(PATHB)testmenu.$(TARGET_EXTENSION): $(PATHO)testmenu.o $(PATHO)menu.o $(PATHU)unity.o $(PATHO)mock_graphics.o $(PATHO)mock_ssd1325.o $(PATHO)mock_queue.o
 	$(LINK) -o $@ $^
 
 # create object files

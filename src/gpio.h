@@ -4,8 +4,9 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#include "FreeRTOS.h"
-#include "queue.h"
+#include "event.h"
+#include "globals.h"
+
 
 #include "driverlib/gpio.h"
 #include "driverlib/pin_map.h"
@@ -23,15 +24,6 @@
 #define SW_BACK GPIO_PIN_4
 #define LED_BLUE GPIO_PIN_2
 #define LED_GREEN GPIO_PIN_3
-
-enum UIEvent {
-    UP,
-    DOWN,
-    SELECT,
-    BACK
-};
-
-QueueHandle_t rxQueue;
 
 void gpioInit();
 

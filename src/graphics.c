@@ -1,9 +1,6 @@
 #include "graphics.h"
 #include "font.h"
 
-#define CHAR_WIDTH 5
-#define CHAR_HEIGHT 8
-
 
 void graphicsChar(char c, uint32_t x, uint32_t y, uint32_t foreground, uint32_t background) {
     

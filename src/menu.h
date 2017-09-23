@@ -1,6 +1,9 @@
 #ifndef MENU_H
 #define MENU_H
 
+#include "FreeRTOS.h"
+#include "queue.h"
+
 typedef void state_fn(struct state *);
 
 struct state
@@ -20,10 +23,14 @@ struct node {
     state_fn * on_click_state;
 };
 
+void display_home_screen(struct state* state);
 void display_menu(struct state* state);
+
+void displaying_home_screen(struct state * state);
 void displaying_menu(struct state * state);
-void menuInitNode(struct node* s, char* n, struct node* pr, struct node* ne, struct node* pa, struct node* ch);
-void menuStartLoop(struct node* rootNode);
+
+void menuInitNode(struct node* s, char* n, struct node* pr, struct node* ne, struct node* pa, struct node* ch, state_fn* next_state_funtion);
+void menuStartLoop(struct node* rootNode, QueueHandle_t queue);
 
 
 

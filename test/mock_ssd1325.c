@@ -13,3 +13,11 @@ void ssd1325SetPixel(uint32_t x, uint32_t y, uint32_t value) {
     receivedPixelValues[y][x] = value;
     //printf("ssd1325SetPixel %d, %d, %d\n", x, y, value);
 }
+
+void ssd1325Display(void) {
+
+}
+
+void ssd1325ClearBuffer(void) {
+    
+}
