@@ -3,6 +3,7 @@
 #include "ssd1325.h"
 //#include "gpio.h"
 #include "event.h"
+#include <stdio.h>
 
 QueueHandle_t rxQueue;
 
@@ -35,6 +36,75 @@ void display_home_screen(struct state* state) {
     graphicsText("home screen", 35, 25, default_fg, default_bg);
     graphicsText("placeholder", 35, 35, default_fg, default_bg);
     ssd1325Display();
+}
+
+uint32_t strlen(const char *str) {
+    register const char *s;
+
+    for (s = str; *s; ++s);
+    return(s - str);
+}
+
+void reverse(char s[]) {
+    int c, i, j;
+
+    for (i = 0, j = strlen(s)-1; i<j; i++, j--) {
+        c = s[i];
+        s[i] = s[j];
+        s[j] = c;
+    }
+}
+
+void itoa(int n, char s[]) {
+    int i, sign;
+
+    if ((sign = n) < 0)  /* record sign */
+        n = -n;          /* make n positive */
+    i = 0;
+    do {       /* generate digits in reverse order */
+        s[i++] = n % 10 + '0';   /* get next digit */
+    } while ((n /= 10) > 0);     /* delete it */
+    if (sign < 0)
+        s[i++] = '-';
+    s[i] = '\0';
+    reverse(s);
+} 
+
+void display_spin_box(struct state* state) {
+    uint32_t default_fg = 10;
+    uint32_t default_bg = 0;
+    char print_string[10];
+    itoa(state->model.something, print_string);
+    //sprintf(print_string, "Something: %d", state->model.something); 
+    ssd1325ClearBuffer();
+    graphicsText(print_string, 0, 25, default_fg, default_bg);
+    ssd1325Display();
+}
+
+// state function for showing a numerical value dialog
+void displaying_spin_box(struct state* state) {
+    display_spin_box(state);
+
+    if (rxQueue != 0) {
+        enum UIEvent event = UP;
+        xQueueReceive(rxQueue, &event, portMAX_DELAY);
+        switch(event) {
+            case UP:
+                state->model.something += 1;
+                break;
+            case DOWN:
+                state->model.something -= 1;
+                break;
+            case BACK:
+                if (state->current_node->parent)
+                    state->current_node = state->current_node->parent;
+                state->next = state->current_node->on_click_state;
+                break;
+            case SELECT:
+            default:
+                break;
+        }
+    }
 }
 
 // state function for showing main screen

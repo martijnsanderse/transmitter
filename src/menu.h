@@ -6,10 +6,16 @@
 
 typedef void state_fn(struct state *);
 
-struct state
-{
+struct model {
+    int32_t something;
+};
+
+struct state {
+    // next state function to execute
     state_fn * next;
+    // data that is taken along
     struct node* current_node; // current menu item
+    struct model model;
 };
 
 struct node {
@@ -25,9 +31,11 @@ struct node {
 
 void display_home_screen(struct state* state);
 void display_menu(struct state* state);
+void display_spin_box(struct state* state);
 
 void displaying_home_screen(struct state * state);
 void displaying_menu(struct state * state);
+void displaying_spin_box(struct state* state);
 
 void menuInitNode(struct node* s, char* n, struct node* pr, struct node* ne, struct node* pa, struct node* ch, state_fn* next_state_funtion);
 void menuStartLoop(struct node* rootNode, QueueHandle_t queue);

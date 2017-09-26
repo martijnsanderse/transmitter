@@ -81,24 +81,28 @@ void showMenuTask(void *pvParameters) {
         struct node menu3_3;
         struct node menu3_4;
 
+        struct node menu3_1_1;
+
         // initialize all nodes. This step defines the menu structure.
         // init(struct_to_init_ptr, name, previous, next, parent, child, next_state_function)
-        menuInitNode(&home    , "home"     , 0        , 0        , 0      , &menu1   , displaying_home_screen);
+        menuInitNode(&home    , "home"               , 0        , 0        , 0      , &menu1   , displaying_home_screen);
 
-        menuInitNode(&menu1   , "select model"   , 0        , &menu2   , &home  , &menu1_1 , displaying_menu);
-        menuInitNode(&menu2   , "add model"   , &menu1   , &menu3   , &home  , &menu2_1 , displaying_menu);
-        menuInitNode(&menu3   , "edit model"   , &menu2   , 0        , &home  , &menu3_1 , displaying_menu);
+        menuInitNode(&menu1   , "select model"       , 0        , &menu2   , &home  , &menu1_1 , displaying_menu);
+        menuInitNode(&menu2   , "add model"          , &menu1   , &menu3   , &home  , &menu2_1 , displaying_menu);
+        menuInitNode(&menu3   , "edit model"         , &menu2   , 0        , &home  , &menu3_1 , displaying_menu);
 
-        menuInitNode(&menu1_1 , "menu 1.1" , 0        , &menu1_2 , &menu1 , 0        , displaying_menu);
-        menuInitNode(&menu1_2 , "menu 1.2" , &menu1_1 , 0        , &menu1 , 0        , displaying_menu);
+        menuInitNode(&menu1_1 , "menu 1.1"           , 0        , &menu1_2 , &menu1 , 0        , displaying_menu);
+        menuInitNode(&menu1_2 , "menu 1.2"           , &menu1_1 , 0        , &menu1 , 0        , displaying_menu);
 
-        menuInitNode(&menu2_1 , "menu 2.1" , 0        , &menu2_2 , &menu2 , 0        , displaying_menu);
-        menuInitNode(&menu2_2 , "menu 2.2" , &menu2_1 , &menu2_3 , &menu2 , 0        , displaying_menu);
-        menuInitNode(&menu2_3 , "menu 2.3" , &menu2_2 , 0        , &menu2 , 0        , displaying_menu);
+        menuInitNode(&menu2_1 , "menu 2.1"           , 0        , &menu2_2 , &menu2 , 0        , displaying_menu);
+        menuInitNode(&menu2_2 , "menu 2.2"           , &menu2_1 , &menu2_3 , &menu2 , 0        , displaying_menu);
+        menuInitNode(&menu2_3 , "menu 2.3"           , &menu2_2 , 0        , &menu2 , 0        , displaying_menu);
 
-        menuInitNode(&menu3_1 , "edit name" , 0        , &menu3_2 , &menu3 , 0        , displaying_menu);
+        menuInitNode(&menu3_1 , "edit name"          , 0        , &menu3_2 , &menu3 , &menu3_1_1 , displaying_menu);
         menuInitNode(&menu3_2 , "configure channels" , &menu3_1 , &menu3_3 , &menu3 , 0        , displaying_menu);
-        menuInitNode(&menu3_3 , "delete" , &menu3_2 , 0 , &menu3 , 0        , displaying_menu);
+        menuInitNode(&menu3_3 , "delete"             , &menu3_2 , 0        , &menu3 , 0        , displaying_menu);
+
+        menuInitNode(&menu3_1_1 , "spinbox"             , 0 , 0        , &menu3_1 , 0        , displaying_spin_box);
 
         menuStartLoop(&home, rxQueue);
         uartPrintln("exited menu loop");
