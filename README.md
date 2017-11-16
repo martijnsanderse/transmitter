@@ -5,12 +5,17 @@ Goals:
 - setup freertos for a cortex M4 board using a gcc-arm toolchain under linux/macosx from scratch.
 - build my own transmitter
 
+Hardware:
+TI TM4C123G board,
+Rotary encoder (adafruit)
+Oled monochrome display (adafruit)
+
 After I got the toolchain setup, and freertos running on the board I ran into something I completely underestimated:
 - writing a GUI.
 
 Status summary: 
 Can I use this to fly my RC airplane? No.
-Will it ever be possible? Maybe.. For now my intention is 
+Will it ever be possible? Maybe.. For now my intention is isolate the gui library and mature it a bit for use in other projects.
 
 The GUI is far from complete, but I got it to a point where I see no difficulties anymore.
 
